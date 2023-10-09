@@ -126,7 +126,7 @@ li:hover {
 	margin-bottom: 1em;
 }
 
-.filters {
+.category-buttons {
 	display: flex;
 	justify-content: center;
 	gap: 10px;
@@ -144,27 +144,12 @@ li:hover {
 	border: solid 1px #1D6154;
 	border-radius: 60px;
 	cursor: pointer;
+	padding: 0.5em 0.8em;
 }
 
 .btn.active {
 	color: white;
 	background-color: #1D6154;
-}
-
-.btn-all {
-	padding: 9px 28px;
-}
-
-.btn-objects {
-	padding: 9px 20px;
-}
-
-.btn-appartments {
-	padding: 9px 14px;
-}
-
-.btn-hotels {
-	padding: 9px;
 }
 
 .gallery {
