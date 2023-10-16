@@ -1,0 +1,67 @@
+.data-modal {
+    border: none;
+    border-radius: 10px;
+    padding: 45px 100px;
+}
+
+.modal-flex {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 60px;
+}
+
+.modal-flex h3 {
+    font-family: 'Work Sans';
+    font-size: 26px;
+    margin-top: 15px;
+}
+
+#modal-gallery {
+	width: 100%;
+	display: grid;
+	grid-template-columns: 0.16fr 0.16fr 0.16fr 0.16fr 0.16fr;
+	grid-column-gap: 6px;
+	grid-row-gap: 22px;
+    justify-content: center;
+}
+
+#modal-gallery img {
+	width: 100%;
+}
+
+.btn-close {
+    border: none;
+    background-color: white;
+    cursor: pointer;
+    position: absolute;
+    margin-top: -1em;
+    margin-right: -46.5em;
+}
+
+.btn-add {
+    position: relative;
+    border: none;
+    border-radius: 60px;
+    background: #1D6154;
+    color: white;
+    text-align: center;
+    font-family: 'Syne';
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 10px 49px;
+    margin-top: 45px;
+}
+
+.btn-add::before {
+    content: "";
+    position: absolute;
+    top: -38px;
+    bottom: 0;
+    right: 0;
+    left: -90px;
+    border: solid 1px #B3B3B3;
+    height: 0;
+    width: 420px;
+}

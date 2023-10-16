@@ -3,6 +3,7 @@ const token = localStorage.getItem("loginData");
 if (token) {
     const logged = document.querySelector(".logged");
     const editButton = createButton("fa-regular fa-pen-to-square fa-lg", "Modifier");
+    editButton.setAttribute("data-open-modal", "");
     logged.appendChild(editButton);
 
     const body = document.querySelector("body");

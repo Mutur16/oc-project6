@@ -12,8 +12,10 @@
 	<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Work+Sans&display=swap" rel="stylesheet">
 	<meta name="description" content="">
 	<link rel="stylesheet" href="./assets/style.css">
-	<script src="assets/scripts/gallery.js" defer></script>
+	<link rel="stylesheet" href="./assets/modal.css">
+	<script type="module" src="assets/scripts/gallery.js" defer></script>
 	<script src="assets/scripts/login.js" defer></script>
+	<script type="module" src="assets/scripts/modal.js" defer></script>
 </head>
 <body>
 	<div class="main-container">
@@ -44,6 +46,15 @@
 				<div class="logged">
 				<h2>Mes Projets</h2>
 				</div>
+				<dialog data-modal class="data-modal">
+					<div class="modal-flex">
+						<button data-close-modal class="btn-close"><i class="fa-solid fa-xmark fa-xl"></i></button>
+						<h3>Galerie photo</h3>
+						<form id="modal-gallery">
+						</form>
+						<button type="submit" class="btn-add">Ajouter une photo</button>
+					</div>
+				</dialog>
 				<div class="category-buttons">
 				</div>
 				<div class="gallery">
