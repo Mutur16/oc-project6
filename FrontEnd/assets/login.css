@@ -12,7 +12,7 @@ h2 {
     margin: 3.3em 0 1.4em 0;
 }
 
-form {
+.login-form {
     display: flex;
     flex-direction: column;
     color: #3D3D3D;
@@ -61,6 +61,7 @@ button {
     border-radius: 60px;
     background-color: #1D6154;
     color: white;
+    cursor: pointer;
 }
 
 .forgot-psw {

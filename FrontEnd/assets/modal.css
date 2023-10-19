@@ -4,20 +4,21 @@
     --btn-text-color: white;
 }
 
+.display-none {
+    display: none !important;
+}
+
 .data-modal {
     border: none;
     border-radius: 10px;
     width: 630px;
 }
 
-.modal-container {
-    padding: 0 100px 45px 100px;
-}
-
-.modal-container, .modal-form {
+#modal-delete-gallery, #modal-form {
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding: 0 100px 45px 100px;
     gap: 60px;
 }
 
@@ -27,7 +28,7 @@
     margin-top: 15px;
 }
 
-.modal-gallery {
+.delete-gallery {
 	width: 100%;
 	display: grid;
 	grid-template-columns: 0.19fr 0.19fr 0.19fr 0.19fr 0.19fr;
@@ -36,13 +37,13 @@
     justify-content: center;
 }
 
-.modal-gallery img {
+.delete-gallery img {
 	width: 100%;
     position: relative;
     z-index: 0;
 }
 
-.modal-gallery button {
+.delete-gallery button {
     all: unset;
     cursor: pointer;
     padding: 4px 5px;
@@ -54,24 +55,24 @@
     margin-top: 0.4em;
 }
 
-.modal-form {
+#modal-form {
     gap: 35px;
 }
 
-.modal-form div {
+#modal-form div {
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
 
-.picture-title, .picture-categories {
+.work-title, .work-category {
     color: #3D3D3D;
     font-family: 'Work Sans';
     font-size: 14px;
     font-weight: 500;
 }
 
-.picture-title input, .picture-categories select {
+.work-title input, .work-category select {
     border: none;
     box-shadow: 0px 4px 14px 0px rgba(0, 0, 0, 0.09);
     width: 420px;
@@ -87,6 +88,16 @@
     clear: both;
     margin: 0 auto;
     width: 100%;
+    position: relative;
+}
+
+#preview img {
+    position: absolute;
+    max-height: 169px;
+    max-width: 420px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .uploader input[type='file'] {
@@ -104,12 +115,12 @@
 }
 
 .fa-image {
-    margin: 50px 0 45px 0;
+    margin: 40px 0 45px 0;
     font-size: 4.5rem;
     color: #CBD6DC;
 }
 
-.picture-add {
+.file-text {
     color: #306685;
     text-align: center;
     font-family: 'Work Sans';
@@ -122,14 +133,14 @@
     background: #CBD6DC;
 }
 
-.picture-size {
+.file-size {
     color: #444;
     font-family: 'Work Sans';
     font-size: 10px;
     font-weight: 400;
 }
 
-.header-btn {
+.modal-header-btn {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -178,6 +189,10 @@
 .btn-submit {
     background: var(--secondary-bg-color);
     margin-top: 60px;
+}
+
+.btn-submit-ok {
+    background-color: #1D6154 !important;
 }
 
 .btn-add::before, .btn-submit::before {

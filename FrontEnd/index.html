@@ -14,7 +14,7 @@
 	<link rel="stylesheet" href="./assets/style.css">
 	<link rel="stylesheet" href="./assets/modal.css">
 	<script type="module" src="assets/scripts/gallery.js" defer></script>
-	<script src="assets/scripts/login.js" defer></script>
+	<script type="module" src="assets/scripts/login.js" defer></script>
 	<script type="module" src="assets/scripts/modal.js" defer></script>
 </head>
 <body>
@@ -25,7 +25,7 @@
 				<ul>
 					<li><a href="#portfolio">projets</a></li>
 					<li><a href="#contact">contact</a></li>
-					<li><a href="connexion.html" class="logout">login</a></li>
+					<li><a href="login.html" class="logout">login</a></li>
 					<li><img src="./assets/icons/instagram.png" alt="Instagram"></li>
 				</ul>
 			</nav>
@@ -47,11 +47,39 @@
 				<h2>Mes Projets</h2>
 				</div>
 				<dialog data-modal class="data-modal">
-					<div class="header-btn">
+					<div class="modal-header-btn">
 						<button class="btn-return"><i class="fa-solid fa-arrow-left fa-xl"></i></button>
 						<button data-close-modal class="btn-close"><i class="fa-solid fa-xmark fa-xl"></i></button>
 					</div>
 					<div class="modal-container">
+						<div id="modal-delete-gallery">
+							<h3>Galerie photo</h3>
+							<div class="delete-gallery">
+							</div>
+							<button class="btn-add">Ajouter une photo</button>
+						</div>
+						<form action="#" id="modal-form">
+							<h3>Ajout photo</h3>
+							<div class="uploader">
+								<label for="image">
+									<div id="preview">
+										<i class="fa-regular fa-image fa-2xl"></i>
+										<span class="file-text">+ Ajouter photo</span>
+										<span class="file-size">jpg, png : 4mo max</span>
+									</div>
+								</label>
+								<input id="image" type="file" name="image" accept="images">
+							</div>
+							<div class="work-title">
+								<label for="title">Titre</label>
+								<input name="title" id="title"></input>
+							</div>
+							<div class="work-category">
+								<label for="category">Catégorie</label>
+								<select name="category" id="category"></select>
+							</div>
+							<button type="submit" class="btn-submit" disabled>Valider</button>
+						</form>
 					</div>
 				</dialog>
 				<div class="category-buttons">

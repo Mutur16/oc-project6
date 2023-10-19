@@ -1,24 +1,22 @@
-import { getWorks } from "./api.js";
+import { getWorks, getCategories } from "./api.js";
 
-const openButton = document.querySelector("[data-open-modal]")
-const closeButton = document.querySelector("[data-close-modal]")
-const modal = document.querySelector("[data-modal]")
-const modalContainer = document.querySelector('.modal-container')
-const returnButton = document.querySelector(".btn-return")
-
-/*OPEN, RETURN AND CLOSE MODAL*/
+// @fixme ; ?
 
 const token = localStorage.getItem("loginData");
+
+const openButton = document.querySelector("[data-open-modal]");
+const closeButton = document.querySelector("[data-close-modal]");
+const modal = document.querySelector("[data-modal]");
+
+const modalGallery = document.getElementById('modal-delete-gallery');
+const modalForm = document.getElementById('modal-form');
+
+/*OPEN AND CLOSE MODAL*/
 
 if (token) {
     openButton.addEventListener("click", () => {
         modal.showModal()
     })
-
-    returnButton.addEventListener('click', () => {
-        returnButton.classList.remove('show-btn-return')
-        showDeleteGalleryModal();
-    });
 
     closeButton.addEventListener("click", () => {
         modal.close()
@@ -37,34 +35,41 @@ if (token) {
     })
 }
 
+/*MODAL OTHER BUTTONS*/
+
+const returnButton = document.querySelector(".btn-return");
+returnButton.addEventListener('click', () => {
+    returnButton.classList.remove('show-btn-return');
+
+    modalGallery.classList.remove('display-none');
+    modalForm.classList.add('display-none');
+});
+
+const addButton = document.querySelector('.btn-add');
+addButton.addEventListener('click', (e) => {
+    e.stopPropagation();
+    showAddFormModal();
+});
+
+const submitButton = document.querySelector('.btn-submit');
+submitButton.addEventListener('click', submitForm);
+
+
 /*SHOW MODAL*/
+/*gallery*/
 
 async function showDeleteGalleryModal() {
-    modalContainer.innerHTML = '';
-
-    const modalGallery = document.createElement("div");
-    modalGallery.classList.add('modal-gallery');
-    modalContainer.appendChild(modalGallery);
-
-    const modalGalleryTitle = createModalTitle("Galerie photo");
-
-    modalContainer.appendChild(modalGalleryTitle);
-    modalContainer.appendChild(modalGallery);
-    
-    createBtnAdd()
-
-    const worksData = await getWorks()
+    modalForm.classList.add('display-none');
+    const deleteGallery = document.querySelector(".delete-gallery");
+    const worksData = await getWorks();
 
     worksData.forEach((work) => {
-        const workElement = document.createElement("figure");
         const img = document.createElement("img");
-        const btnDelete = document.createElement("button");
-
         img.src = work.imageUrl;
         img.alt = work.title;
 
+        const btnDelete = document.createElement("button");
         btnDelete.innerHTML = '<i class="fa-solid fa-trash-can fa-sm"></i>';
-
         btnDelete.addEventListener('click', async () => {
             try {
                 workElement.remove();
@@ -73,21 +78,23 @@ async function showDeleteGalleryModal() {
             }
         });
 
+        const workElement = document.createElement("figure");
         workElement.appendChild(img);
         workElement.appendChild(btnDelete);
 
-        modalGallery.appendChild(workElement);
-    }
-)}
+        deleteGallery.appendChild(workElement);
+    }) 
+}
 
 showDeleteGalleryModal()
 
+/*form*/
+
 async function showAddFormModal() {
-    modalContainer.innerHTML = '';
+    modalGallery.classList.add('display-none');
+    modalForm.classList.remove('display-none');
 
-    returnButton.classList.add('show-btn-return')
-
-    createForm()
+    returnButton.classList.add('show-btn-return');
 }
 
 /*DELETE*/
@@ -96,95 +103,67 @@ async function showAddFormModal() {
 
 function submitForm(event) {
     event.preventDefault();
-    const photo = document.getElementById('photo').value;
+    const image = document.getElementById('image').value;
     const title = document.getElementById('title').value;
     const category = document.getElementById('category').value;
-    console.log("Photo chargée :", photo);
-    console.log("Titre :", title);
-    console.log("Catégorie :", category);
-    document.getElementById('photoForm').reset();
+    console.log("Uploaded file :", image);
+    console.log("Title :", title);
+    console.log("Category :", category);
+    document.getElementById('modal-form').reset();
 }
 
-/*CREATE*/
 
-function createBtnAdd() {
-    const btnAdd = document.createElement("button");
-    btnAdd.classList.add("btn-add");
-    btnAdd.innerHTML = 'Ajouter une photo';
-    modalContainer.appendChild(btnAdd);
+/*FORM*/
 
-    btnAdd.addEventListener('click', (e) => {
-        e.stopPropagation();
-        showAddFormModal();
-    });
-}
+document.getElementById('image').addEventListener('change', function() {
+    const preview = document.getElementById('preview');
+    const file = this.files[0];
+    const reader = new FileReader();
 
-function createModalTitle(text) {
-    const title = document.createElement("h3");
-    title.innerHTML = `${text}`;
-    return title;
-}
+    reader.onloadend = function() {
+        const img = document.createElement('img');
+        img.src = reader.result;
+        preview.innerHTML = '';
+        preview.appendChild(img);
+    }
+    if (file) {
+        reader.readAsDataURL(file);
+    }
+});
 
-function createForm() {
-    const form = document.createElement('form');
-    form.classList.add('modal-form');
-    form.id = 'photoForm';
-    form.enctype = 'multipart/form-data';
-    const fileDiv = document.createElement('div');
-    fileDiv.classList.add('uploader')
-    const fileLabel = document.createElement('label');
-    fileLabel.htmlFor = 'photo';
-    fileLabel.innerHTML = '<i class="fa-regular fa-image fa-2xl"></i>' + '<span class="picture-add">+ Ajouter photo</span>' + '<span class="picture-size">jpg, png : 4mo max</span>';
-    const fileInput = document.createElement('input');
-    fileInput.type = 'file';
-    fileInput.id = 'photo';
-    fileInput.name = 'photo';
-    fileInput.accept = 'image/*';
-    const modalAddTitle = createModalTitle("Ajout photo");
-    fileDiv.appendChild(fileLabel);
-    fileDiv.appendChild(fileInput);
-    form.appendChild(modalAddTitle);
-    form.appendChild(fileDiv);
+async function createFormCategory() {
+    const categories = await getCategories();
+    const categorySelect = document.getElementById('category');
 
-    const titleDiv = document.createElement('div');
-    titleDiv.classList.add('picture-title');
-    const titleLabel = document.createElement('label');
-    titleLabel.htmlFor = 'title';
-    titleLabel.textContent = 'Titre';
-    const titleInput = document.createElement('input');
-    titleInput.type = 'text';
-    titleInput.id = 'title';
-    titleInput.name = 'title';
-    titleInput.required = true;
-    titleDiv.appendChild(titleLabel);
-    titleDiv.appendChild(titleInput);
-    form.appendChild(titleDiv);
-
-    const categoryDiv = document.createElement('div');
-    categoryDiv.classList.add('picture-categories');
-    const categoryLabel = document.createElement('label');
-    categoryLabel.htmlFor = 'category';
-    categoryLabel.textContent = 'Catégorie';
-    const categorySelect = document.createElement('select');
-    categorySelect.id = 'category';
-    categorySelect.name = 'category';
-    const categories = ['Objets', 'Appartements', 'Hotels & restaurants'];
-    categories.forEach(category => {
+    categories.forEach((category) => {
         const option = document.createElement('option');
-        option.value = category.toLowerCase();
-        option.text = category;
+        option.setAttribute('value', category.id);
+        option.text = category.name;
         categorySelect.appendChild(option);
     });
-    categoryDiv.appendChild(categoryLabel);
-    categoryDiv.appendChild(categorySelect);
-    form.appendChild(categoryDiv);
-
-    const submitButton = document.createElement('button');
-    submitButton.type = 'submit';
-    submitButton.textContent = 'Valider';
-    submitButton.classList.add("btn-submit");
-    submitButton.addEventListener('click', submitForm);
-    form.appendChild(submitButton);
-
-    modalContainer.appendChild(form);
 }
+createFormCategory()
+
+document.addEventListener('DOMContentLoaded', function() {
+    const modalForm = document.querySelector('#modal-form');
+    const submitButton = document.querySelector('.btn-submit');
+
+    modalForm.addEventListener('input', function() {
+        let allFieldsFilled = true;
+        const inputs = modalForm.querySelectorAll('input');
+        for (let i = 0; i < inputs.length; i++) {
+            if (!inputs[i].value) {
+                allFieldsFilled = false;
+                break;
+            }
+        }
+
+        if (allFieldsFilled) {
+            submitButton.removeAttribute('disabled');
+            submitButton.classList.add('btn-submit-ok');
+        } else {
+            submitButton.setAttribute('disabled', 'disabled');
+            submitButton.classList.remove('btn-submit-ok');
+        }
+    });
+});

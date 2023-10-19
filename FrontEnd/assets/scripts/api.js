@@ -31,3 +31,15 @@ export async function getCategories() {
         console.error("Error fetching categories:", error);
     }
 }
+
+export async function login(email, password) {
+    const response = await fetch(`${apiRoute}users/login`, {
+        method: "POST",
+        body: JSON.stringify({ email: email, password: password }),
+        headers: { "Content-Type": "application/json" }
+    });
+
+    if (response.status === 200) {
+        return await response.json()
+    }
+}

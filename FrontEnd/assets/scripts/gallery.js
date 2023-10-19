@@ -1,10 +1,10 @@
 import { getWorks, getCategories } from "./api.js";
 
-async function createWorks(categoryId) {
+async function createWorksGallery(categoryId) {
     const gallery = document.querySelector(".gallery");
     gallery.innerHTML = "";
 
-    const worksData = await getWorks()
+    const worksData = await getWorks();
     const filteredWorks = !categoryId ? worksData : worksData.filter((work) => work.categoryId === categoryId);
 
     filteredWorks.forEach((work) => {
@@ -24,7 +24,7 @@ async function createWorks(categoryId) {
 }
 
 async function createCategoryButtons() {
-    const categories = await getCategories()
+    const categories = await getCategories();
 
     const buttonsContainer = document.querySelector(".category-buttons");
 
@@ -37,7 +37,7 @@ async function createCategoryButtons() {
             activeButton.classList.remove("active");
         }
         allCategoriesButton.classList.add("active");
-        createWorks();
+        createWorksGallery();
     });
     buttonsContainer.appendChild(allCategoriesButton);
 
@@ -46,16 +46,16 @@ async function createCategoryButtons() {
         button.textContent = category.name;
         button.classList.add("btn");
         button.addEventListener("click", () => {
-        const activeButton = document.querySelector(".btn.active");
-        if (activeButton) {
-            activeButton.classList.remove("active");
-        }
-        button.classList.add("active");
-        createWorks(category.id);
+            const activeButton = document.querySelector(".btn.active");
+            if (activeButton) {
+                activeButton.classList.remove("active");
+            }
+            button.classList.add("active");
+            createWorksGallery(category.id);
         });
         buttonsContainer.appendChild(button);
     });
 }
 
 createCategoryButtons();
-createWorks();
+createWorksGallery();
