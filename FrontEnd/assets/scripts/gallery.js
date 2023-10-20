@@ -1,6 +1,6 @@
 import { getWorks, getCategories } from "./api.js";
 
-async function createWorksGallery(categoryId) {
+export async function createWorksGallery(categoryId) {
     const gallery = document.querySelector(".gallery");
     gallery.innerHTML = "";
 

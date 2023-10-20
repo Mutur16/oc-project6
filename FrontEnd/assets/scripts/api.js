@@ -3,6 +3,11 @@ let worksData = [];
 let workIdsSet = new Set(); 
 
 export async function getWorks(clear = false) {
+    if (clear) {
+        worksData = []
+        workIdsSet = new Set()
+    }
+
     if (!workIdsSet.size) {
         try {
             const response = await fetch(`${apiRoute}works`);
@@ -42,4 +47,14 @@ export async function login(email, password) {
     if (response.status === 200) {
         return await response.json()
     }
+}
+
+export async function deleteWorks(id) {
+    const loginData = JSON.parse(localStorage.getItem("loginData"));
+    await fetch(`${apiRoute}works/${id}`, {
+        method: "DELETE",
+        headers: {
+            'Authorization': `Bearer ${loginData.token}`
+        }
+    })
 }

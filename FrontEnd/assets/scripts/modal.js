@@ -1,6 +1,5 @@
-import { getWorks, getCategories } from "./api.js";
-
-// @fixme ; ?
+import { getWorks, getCategories, deleteWorks } from "./api.js";
+import { createWorksGallery } from "./gallery.js";
 
 const token = localStorage.getItem("loginData");
 
@@ -38,7 +37,8 @@ if (token) {
 /*MODAL OTHER BUTTONS*/
 
 const returnButton = document.querySelector(".btn-return");
-returnButton.addEventListener('click', () => {
+returnButton.addEventListener('click', (e) => {
+    e.stopPropagation();
     returnButton.classList.remove('show-btn-return');
 
     modalGallery.classList.remove('display-none');
@@ -54,9 +54,7 @@ addButton.addEventListener('click', (e) => {
 const submitButton = document.querySelector('.btn-submit');
 submitButton.addEventListener('click', submitForm);
 
-
-/*SHOW MODAL*/
-/*gallery*/
+/*DELETE AND SHOW GALLERY WORK*/
 
 async function showDeleteGalleryModal() {
     modalForm.classList.add('display-none');
@@ -68,11 +66,14 @@ async function showDeleteGalleryModal() {
         img.src = work.imageUrl;
         img.alt = work.title;
 
-        const btnDelete = document.createElement("button");
-        btnDelete.innerHTML = '<i class="fa-solid fa-trash-can fa-sm"></i>';
-        btnDelete.addEventListener('click', async () => {
+        const deleteButton = document.createElement("button");
+        deleteButton.innerHTML = '<i class="fa-solid fa-trash-can fa-sm"></i>';
+        deleteButton.addEventListener('click', async () => {
             try {
+                await deleteWorks(work.id);
                 workElement.remove();
+                await getWorks(true)
+                createWorksGallery();
             } catch (error) {
                 console.error('Une erreur est survenue lors de la suppression :', error);
             }
@@ -80,7 +81,7 @@ async function showDeleteGalleryModal() {
 
         const workElement = document.createElement("figure");
         workElement.appendChild(img);
-        workElement.appendChild(btnDelete);
+        workElement.appendChild(deleteButton);
 
         deleteGallery.appendChild(workElement);
     }) 
@@ -88,7 +89,7 @@ async function showDeleteGalleryModal() {
 
 showDeleteGalleryModal()
 
-/*form*/
+/*SUBMIT AND SHOW FORM*/
 
 async function showAddFormModal() {
     modalGallery.classList.add('display-none');
@@ -96,10 +97,6 @@ async function showAddFormModal() {
 
     returnButton.classList.add('show-btn-return');
 }
-
-/*DELETE*/
-
-/*ADD*/
 
 function submitForm(event) {
     event.preventDefault();
@@ -112,8 +109,7 @@ function submitForm(event) {
     document.getElementById('modal-form').reset();
 }
 
-
-/*FORM*/
+/*FORM functions*/
 
 document.getElementById('image').addEventListener('change', function() {
     const preview = document.getElementById('preview');
