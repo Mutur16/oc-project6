@@ -1,4 +1,4 @@
-import { getWorks, getCategories, deleteWorks } from "./api.js";
+import { getWorks, getCategories, deleteWork, addWork } from "./api.js";
 import { createWorksGallery } from "./gallery.js";
 
 const token = localStorage.getItem("loginData");
@@ -7,8 +7,8 @@ const openButton = document.querySelector("[data-open-modal]");
 const closeButton = document.querySelector("[data-close-modal]");
 const modal = document.querySelector("[data-modal]");
 
-const modalGallery = document.getElementById('modal-delete-gallery');
-const modalForm = document.getElementById('modal-form');
+const modalGallery = document.querySelector('#modal-delete-gallery');
+const modalForm = document.querySelector('#modal-form');
 
 /*OPEN AND CLOSE MODAL*/
 
@@ -34,43 +34,24 @@ if (token) {
     })
 }
 
-/*MODAL OTHER BUTTONS*/
-
-const returnButton = document.querySelector(".btn-return");
-returnButton.addEventListener('click', (e) => {
-    e.stopPropagation();
-    returnButton.classList.remove('show-btn-return');
-
-    modalGallery.classList.remove('display-none');
-    modalForm.classList.add('display-none');
-});
-
-const addButton = document.querySelector('.btn-add');
-addButton.addEventListener('click', (e) => {
-    e.stopPropagation();
-    showAddFormModal();
-});
-
-const submitButton = document.querySelector('.btn-submit');
-submitButton.addEventListener('click', submitForm);
-
 /*DELETE AND SHOW GALLERY WORK*/
 
 async function showDeleteGalleryModal() {
     modalForm.classList.add('display-none');
     const deleteGallery = document.querySelector(".delete-gallery");
+    deleteGallery.innerHTML = '';
     const worksData = await getWorks();
 
     worksData.forEach((work) => {
         const img = document.createElement("img");
-        img.src = work.imageUrl;
-        img.alt = work.title;
+        img.setAttribute('src', work.imageUrl);
+        img.setAttribute('alt', work.title);
 
         const deleteButton = document.createElement("button");
         deleteButton.innerHTML = '<i class="fa-solid fa-trash-can fa-sm"></i>';
         deleteButton.addEventListener('click', async () => {
             try {
-                await deleteWorks(work.id);
+                await deleteWork(work.id);
                 workElement.remove();
                 await getWorks(true)
                 createWorksGallery();
@@ -87,9 +68,28 @@ async function showDeleteGalleryModal() {
     }) 
 }
 
+const addButton = document.querySelector('.btn-add');
+addButton.addEventListener('click', (e) => {
+    e.stopPropagation();
+    showAddFormModal();
+});
+
 showDeleteGalleryModal()
 
 /*SUBMIT AND SHOW FORM*/
+
+const returnButton = document.querySelector(".btn-return");
+returnButton.addEventListener('click', (e) => {
+    e.stopPropagation();
+    returnButton.classList.remove('show-btn-return');
+
+    modalGallery.classList.remove('display-none');
+    modalForm.classList.add('display-none');
+
+    showDeleteGalleryModal()
+    getWorks(true)
+    createWorksGallery();
+});
 
 async function showAddFormModal() {
     modalGallery.classList.add('display-none');
@@ -98,31 +98,44 @@ async function showAddFormModal() {
     returnButton.classList.add('show-btn-return');
 }
 
-function submitForm(event) {
-    event.preventDefault();
-    const image = document.getElementById('image').value;
-    const title = document.getElementById('title').value;
-    const category = document.getElementById('category').value;
-    console.log("Uploaded file :", image);
-    console.log("Title :", title);
-    console.log("Category :", category);
-    document.getElementById('modal-form').reset();
+async function submitForm() {
+    const image = document.querySelector('#image').files[0];
+    const title = document.querySelector('#title').value;
+    const category = document.querySelector('#category').value;
+    document.querySelector('#modal-form').reset();
+    await addWork(image, title, category);
+    await getWorks(true)
+    createWorksGallery();
 }
+
+const submitButton = document.querySelector('.btn-submit');
+const preview = document.querySelector('#preview');
+const hideUploader = document.querySelector('.hide-uploader')
+
+submitButton.addEventListener('click', (e) => {
+    e.stopPropagation()
+    submitForm();
+
+    submitButton.setAttribute('disabled', 'disabled');
+    submitButton.classList.remove('btn-submit-ok');
+
+    hideUploader.classList.remove('hide-for-preview');
+    preview.remove('img');
+})
 
 /*FORM functions*/
 
 document.getElementById('image').addEventListener('change', function() {
-    const preview = document.getElementById('preview');
     const file = this.files[0];
     const reader = new FileReader();
 
     reader.onloadend = function() {
         const img = document.createElement('img');
         img.src = reader.result;
-        preview.innerHTML = '';
         preview.appendChild(img);
     }
     if (file) {
+        hideUploader.classList.add('hide-for-preview');
         reader.readAsDataURL(file);
     }
 });
@@ -142,7 +155,6 @@ createFormCategory()
 
 document.addEventListener('DOMContentLoaded', function() {
     const modalForm = document.querySelector('#modal-form');
-    const submitButton = document.querySelector('.btn-submit');
 
     modalForm.addEventListener('input', function() {
         let allFieldsFilled = true;

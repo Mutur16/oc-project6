@@ -49,12 +49,29 @@ export async function login(email, password) {
     }
 }
 
-export async function deleteWorks(id) {
+export async function deleteWork(id) {
     const loginData = JSON.parse(localStorage.getItem("loginData"));
     await fetch(`${apiRoute}works/${id}`, {
         method: "DELETE",
         headers: {
-            'Authorization': `Bearer ${loginData.token}`
+            "Authorization": `Bearer ${loginData.token}`
         }
     })
+}
+
+export async function addWork(image, title, category) {
+    const loginData = JSON.parse(localStorage.getItem("loginData"));
+
+    let formData  = new FormData();
+    formData.append("image", image);
+    formData.append("title", title);
+    formData.append("category", category);
+
+    await fetch(`${apiRoute}works`, {
+        method: "POST",
+        body: formData,
+        headers: { 
+            "Authorization": `Bearer ${loginData.token}`
+        }
+    });
 }
