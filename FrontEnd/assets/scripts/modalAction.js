@@ -5,7 +5,8 @@ import { createWorksGallery } from "./gallery.js";
 export async function deleteWorkGallery(e) {
     const target = e.target;
     let workElement = target.parentElement;
-    if (target.tagName === "i") {
+    
+    if (target.tagName === "I") {
         workElement = target.parentElement.parentElement;
     }
 
