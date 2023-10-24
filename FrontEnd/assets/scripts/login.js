@@ -1,5 +1,7 @@
 import { login } from "./api.js";
 
+/*LOGIN FORM*/
+
 const loginForm = document.querySelector('#login-form');
 if (loginForm) {
     loginForm.addEventListener("submit", async (event) => {
@@ -23,6 +25,8 @@ if (loginForm) {
         }
     });
 }
+
+/*INDEX - LOGGED*/
 
 const token = localStorage.getItem('loginData');
 const logged = document.querySelector(".logged");

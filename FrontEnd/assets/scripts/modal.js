@@ -1,5 +1,6 @@
-import { getWorks, getCategories, deleteWork, addWork } from "./api.js";
+import { getWorks, getCategories } from "./api.js";
 import { createWorksGallery } from "./gallery.js";
+import { deleteWorkGallery, submitForm } from "./modalAction.js";
 
 const token = localStorage.getItem("loginData");
 
@@ -13,8 +14,10 @@ const modalForm = document.querySelector('#modal-form');
 /*OPEN AND CLOSE MODAL*/
 
 if (token) {
+
     openButton.addEventListener("click", () => {
         modal.showModal()
+        showGalleryModal()
     })
 
     closeButton.addEventListener("click", () => {
@@ -36,7 +39,7 @@ if (token) {
 
 /*DELETE AND SHOW GALLERY WORK*/
 
-async function showDeleteGalleryModal() {
+async function showGalleryModal() {
     modalForm.classList.add('display-none');
     const deleteGallery = document.querySelector(".delete-gallery");
     deleteGallery.innerHTML = '';
@@ -47,21 +50,14 @@ async function showDeleteGalleryModal() {
         img.setAttribute('src', work.imageUrl);
         img.setAttribute('alt', work.title);
 
+        const workElement = document.createElement("figure");
+        workElement.setAttribute('data-work-id', work.id);
+        workElement.appendChild(img);
+
         const deleteButton = document.createElement("button");
         deleteButton.innerHTML = '<i class="fa-solid fa-trash-can fa-sm"></i>';
-        deleteButton.addEventListener('click', async () => {
-            try {
-                await deleteWork(work.id);
-                workElement.remove();
-                await getWorks(true)
-                createWorksGallery();
-            } catch (error) {
-                console.error('Une erreur est survenue lors de la suppression :', error);
-            }
-        });
+        deleteButton.addEventListener('click', deleteWorkGallery);
 
-        const workElement = document.createElement("figure");
-        workElement.appendChild(img);
         workElement.appendChild(deleteButton);
 
         deleteGallery.appendChild(workElement);
@@ -74,8 +70,6 @@ addButton.addEventListener('click', (e) => {
     showAddFormModal();
 });
 
-showDeleteGalleryModal()
-
 /*SUBMIT AND SHOW FORM*/
 
 const returnButton = document.querySelector(".btn-return");
@@ -86,7 +80,7 @@ returnButton.addEventListener('click', (e) => {
     modalGallery.classList.remove('display-none');
     modalForm.classList.add('display-none');
 
-    showDeleteGalleryModal()
+    showGalleryModal()
     getWorks(true)
     createWorksGallery();
 });
@@ -98,19 +92,9 @@ async function showAddFormModal() {
     returnButton.classList.add('show-btn-return');
 }
 
-async function submitForm() {
-    const image = document.querySelector('#image').files[0];
-    const title = document.querySelector('#title').value;
-    const category = document.querySelector('#category').value;
-    document.querySelector('#modal-form').reset();
-    await addWork(image, title, category);
-    await getWorks(true)
-    createWorksGallery();
-}
-
 const submitButton = document.querySelector('.btn-submit');
 const preview = document.querySelector('#preview');
-const hideUploader = document.querySelector('.hide-uploader')
+const hideUploader = document.querySelector('.hide-uploader');
 
 submitButton.addEventListener('click', (e) => {
     e.stopPropagation()
@@ -120,22 +104,36 @@ submitButton.addEventListener('click', (e) => {
     submitButton.classList.remove('btn-submit-ok');
 
     hideUploader.classList.remove('hide-for-preview');
-    preview.remove('img');
+    preview.removeChild(preview.firstChild);
 })
 
 /*FORM functions*/
 
-document.getElementById('image').addEventListener('change', function() {
+const previewImage = document.querySelector('#image');
+const maxFileSize = 4 * 1024 * 1024;
+const acceptedFormats = ['image/jpeg', 'image/png'];
+
+previewImage.addEventListener('change', function () {
     const file = this.files[0];
     const reader = new FileReader();
 
-    reader.onloadend = function() {
-        const img = document.createElement('img');
-        img.src = reader.result;
-        preview.appendChild(img);
-    }
     if (file) {
-        hideUploader.classList.add('hide-for-preview');
+        if (file.size > maxFileSize) {
+            alert('Le fichier est trop volumineux. Veuillez sélectionner un fichier de moins de 4 Mo.');
+            return;
+        }
+
+        if (!acceptedFormats.includes(file.type)) {
+            alert('Format de fichier non pris en charge. Veuillez sélectionner un fichier au format JPG ou PNG.');
+            return;
+        }
+
+        reader.onloadend = function () {
+            const img = document.createElement('img');
+            img.src = reader.result;
+            preview.appendChild(img);
+        };
+
         reader.readAsDataURL(file);
     }
 });
