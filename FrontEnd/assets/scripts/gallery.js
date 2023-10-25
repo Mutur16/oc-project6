@@ -1,5 +1,7 @@
 import { getWorks, getCategories } from "./api.js";
 
+export let activeCategoryId;
+
 export async function createWorksGallery(categoryId) {
     const gallery = document.querySelector(".gallery");
     gallery.innerHTML = "";
@@ -51,7 +53,8 @@ async function createCategoryButtons() {
                 activeButton.classList.remove("active");
             }
             button.classList.add("active");
-            createWorksGallery(category.id);
+            activeCategoryId = category.id;
+            createWorksGallery(activeCategoryId);
         });
         buttonsContainer.appendChild(button);
     });

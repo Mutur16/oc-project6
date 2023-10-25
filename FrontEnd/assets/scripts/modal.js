@@ -1,5 +1,4 @@
 import { getWorks, getCategories } from "./api.js";
-import { createWorksGallery } from "./gallery.js";
 import { deleteWorkGallery, submitForm } from "./modalAction.js";
 
 const token = localStorage.getItem("loginData");
@@ -16,8 +15,8 @@ const modalForm = document.querySelector('#modal-form');
 if (token) {
 
     openButton.addEventListener("click", () => {
-        modal.showModal()
-        showGalleryModal()
+        modal.showModal();
+        returnToModalGallery()
     })
 
     closeButton.addEventListener("click", () => {
@@ -67,7 +66,7 @@ async function showGalleryModal() {
 const addButton = document.querySelector('.btn-add');
 addButton.addEventListener('click', (e) => {
     e.stopPropagation();
-    showAddFormModal();
+    showAddFormModal()
 });
 
 /*SUBMIT AND SHOW FORM*/
@@ -75,17 +74,10 @@ addButton.addEventListener('click', (e) => {
 const returnButton = document.querySelector(".btn-return");
 returnButton.addEventListener('click', (e) => {
     e.stopPropagation();
-    returnButton.classList.remove('show-btn-return');
-
-    modalGallery.classList.remove('display-none');
-    modalForm.classList.add('display-none');
-
-    showGalleryModal()
-    getWorks(true)
-    createWorksGallery();
+    returnToModalGallery()
 });
 
-async function showAddFormModal() {
+function showAddFormModal() {
     modalGallery.classList.add('display-none');
     modalForm.classList.remove('display-none');
 
@@ -97,7 +89,7 @@ const preview = document.querySelector('#preview');
 const hideUploader = document.querySelector('.hide-uploader');
 
 submitButton.addEventListener('click', (e) => {
-    e.stopPropagation()
+    e.stopPropagation();
     submitForm();
 
     submitButton.setAttribute('disabled', 'disabled');
@@ -107,7 +99,17 @@ submitButton.addEventListener('click', (e) => {
     preview.removeChild(preview.firstChild);
 })
 
-/*FORM functions*/
+/*FORM and return functions*/
+
+function returnToModalGallery() {
+    returnButton.classList.remove('show-btn-return');
+
+    modalGallery.classList.remove('display-none');
+    modalForm.classList.add('display-none');
+
+    showGalleryModal();
+    getWorks(true)
+}
 
 const previewImage = document.querySelector('#image');
 const maxFileSize = 4 * 1024 * 1024;
@@ -135,6 +137,8 @@ previewImage.addEventListener('change', function () {
         };
 
         reader.readAsDataURL(file);
+
+        hideUploader.classList.add('hide-for-preview');
     }
 });
 
@@ -166,10 +170,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (allFieldsFilled) {
             submitButton.removeAttribute('disabled');
-            submitButton.classList.add('btn-submit-ok');
+            submitButton.classList.add('btn-submit-ok')
         } else {
             submitButton.setAttribute('disabled', 'disabled');
-            submitButton.classList.remove('btn-submit-ok');
+            submitButton.classList.remove('btn-submit-ok')
         }
     });
 });
