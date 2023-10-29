@@ -1,8 +1,13 @@
 import { login } from "./api.js";
 
+const loginForm = document.querySelector('#login-form');
+const token = localStorage.getItem('loginData');
+if (loginForm && token) {
+    window.location.href = "../../index.html";
+}
+
 /*LOGIN FORM*/
 
-const loginForm = document.querySelector('#login-form');
 if (loginForm) {
     loginForm.addEventListener("submit", async (event) => {
         event.preventDefault();
@@ -15,7 +20,6 @@ if (loginForm) {
     
             if (loginData !== undefined) {
                 localStorage.setItem("loginData", JSON.stringify(loginData));
-                window.location.href = "../../index.html";
             } else {
                 const errorMessageElement = document.getElementById("errorMessage");
                 errorMessageElement.textContent = "Email et/ou mot de passe incorrect(s).";
@@ -28,7 +32,6 @@ if (loginForm) {
 
 /*INDEX - LOGGED*/
 
-const token = localStorage.getItem('loginData');
 const logged = document.querySelector(".logged");
 if (token && logged) {
     const editButton = document.createElement("button");
