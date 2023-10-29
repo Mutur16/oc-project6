@@ -1,0 +1,80 @@
+.selected {
+    font-weight: 600;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h2 {
+    margin: 3.3em 0 1.4em 0;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    color: #3D3D3D;
+    font-family: 'Work Sans';
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.container-input {
+    display: flex;
+    flex-direction: column;
+    gap: 2.1em;
+}
+
+.container-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 2.4em;
+    gap: 2em;
+}
+
+input,
+textarea {
+    width: 359px;
+    height: 31px;
+    padding: 10px;
+    font-size: 14px;
+    border-radius: 3px;
+    border: none;
+	box-shadow: 0px 4px 14px 0px rgba(0, 0, 0, 0.09);
+}
+
+label {
+    margin-bottom: -20px;
+}
+
+button {
+    all: unset;
+    text-align: center;
+    font-family: 'Syne';
+    font-size: 14px;
+    font-weight: 700;
+    width: 179px;
+    height: 36px;
+    border-radius: 60px;
+    background-color: #1D6154;
+    color: white;
+    cursor: pointer;
+}
+
+.forgot-psw {
+    text-decoration-line: underline;
+}
+
+#errorMessage {
+    color: red;
+}
+
+footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+}
