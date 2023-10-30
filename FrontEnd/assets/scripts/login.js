@@ -20,6 +20,7 @@ if (loginForm) {
     
             if (loginData !== undefined) {
                 localStorage.setItem("loginData", JSON.stringify(loginData));
+                window.location.href = "../../index.html";
             } else {
                 const errorMessageElement = document.getElementById("errorMessage");
                 errorMessageElement.textContent = "Email et/ou mot de passe incorrect(s).";
@@ -32,11 +33,11 @@ if (loginForm) {
 
 /*INDEX - LOGGED*/
 
-const logged = document.querySelector(".logged");
-if (token && logged) {
+if (token) {
     const editButton = document.createElement("button");
     editButton.innerHTML = `<i class="fa-regular fa-pen-to-square fa-lg"></i> Modifier`;
     editButton.setAttribute("data-open-modal", "");
+    const logged = document.querySelector(".logged");
     logged.appendChild(editButton);
 
     const body = document.querySelector("body");
@@ -48,7 +49,7 @@ if (token && logged) {
 
     const logout = document.querySelector(".logout");
     logout.innerHTML = "logout";
-    logout.href = "index.html";
+    logout.setAttribute("href", "index.html");
 
     logout.addEventListener("click", function () {
         localStorage.removeItem("loginData");
