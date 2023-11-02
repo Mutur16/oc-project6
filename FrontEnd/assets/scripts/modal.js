@@ -30,10 +30,13 @@ if (token) {
             e.clientX > dialogDimensions.right ||
             e.clientY < dialogDimensions.top ||
             e.clientY > dialogDimensions.bottom
-        ) {
-            modal.close()
+        );
+        const isInput = e.target.tagName === "INPUT";
+    
+        if (!isInsideModal && !isInput) {
+            modal.close();
         }
-    })
+    });
 }
 
 /*DELETE AND SHOW GALLERY WORK*/
@@ -88,8 +91,8 @@ const submitButton = document.querySelector('.btn-submit');
 const preview = document.querySelector('#preview');
 const hideUploader = document.querySelector('.hide-uploader');
 
-submitButton.addEventListener('click', (e) => {
-    e.stopPropagation();
+submitButton.addEventListener('click', (event) => {
+    event.preventDefault()
     submitForm();
 
     submitButton.setAttribute('disabled', 'disabled');
